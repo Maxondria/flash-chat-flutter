@@ -9,11 +9,33 @@ class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation animationColor;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+        duration: Duration(seconds: 1), vsync: this, upperBound: 1);
+
+    animationColor = ColorTween(begin: Colors.blueGrey, end: Colors.white)
+        .animate(controller);
+
+    controller.forward();
+
+    controller.addListener(() {
+      //will keep redrawing screen on every change, so current controller.value will be taken anyway
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: animationColor.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
